@@ -32,11 +32,22 @@ namespace LearningProject
         }
     }
 
+    public static class ExtensionMethods
+    {
+        public static void WriteString(this string str)
+        {
+            Console.WriteLine(str);
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
-            var testImplemenation = new Test();
+            var testImplemenation = new TestImplementation();
+            "Hi".WriteString();
+            Console.WriteLine("Press enter to exit...");
+            Console.ReadLine();
         }
     }
 }
