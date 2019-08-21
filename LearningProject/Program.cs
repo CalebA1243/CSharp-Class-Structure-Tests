@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Threading;
 
 namespace LearningProject
 {
@@ -21,14 +22,36 @@ namespace LearningProject
 
     public class TestImplementation : Test, ITest
     {
+
+        //public delegate void TestFinishedEventHandler(object source, EventArgs args);
+
+        public event EventHandler TestFinished;
+
+
         public void Test()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Test method in progress.");
+            Thread.Sleep(3000);
+            OnTestFinished();
+
         }
 
         public override void TestMethod()
         {
             throw new NotImplementedException();
+        }
+
+        private void OnTestFinished()
+        {
+            TestFinished ? .Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public class TestSubscriber
+    {
+        public void OnTestFinished(object source, EventArgs e)
+        {
+            Console.WriteLine("Currently writing a thing");
         }
     }
 
@@ -45,7 +68,12 @@ namespace LearningProject
         static void Main(string[] args)
         {
             var testImplemenation = new TestImplementation();
+            var testImplementation2 = Activator.CreateInstance(typeof(TestImplementation));
+            var testSubsriber = new TestSubscriber();
+
+            testImplemenation.TestFinished += testSubsriber.OnTestFinished;
             "Hi".WriteString();
+            testImplemenation.Test();
             Console.WriteLine("Press enter to exit...");
             Console.ReadLine();
         }
